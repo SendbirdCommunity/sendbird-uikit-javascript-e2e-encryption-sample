@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import { useSendbirdStateContext, sendBirdSelectors } from "sendbird-uikit";
 import {encryptMessage, loadVirgilGroup} from "./e3";
 
-
 export const CustomMessageInput = (props) => {
 
     //Bring in Sendbird context and send message functionality.
@@ -12,19 +11,25 @@ export const CustomMessageInput = (props) => {
     const [placeHolder, setPlaceHolder] = useState("Enter message");
     const [inputMessage, setInputMessage] = useState("")
 
+
     async function onSend () {
 
-        const virgilGroup = await loadVirgilGroup(props.e3, props.channel.channel)
-        if(virgilGroup.error) {return console.error(virgilGroup.errorMessage)}
+        //Set placeholder for pending state
+        setPlaceHolder("Encrypting and sending....");
+        setInputMessage("");
 
-        const encryptedMessage = await encryptMessage(props.e3, virgilGroup, inputMessage)
-        if(virgilGroup.error) {return console.error(encryptedMessage.errorMessage)}
+        //Encrypt text message
+        const encryptedMessage = await encryptMessage(props.e3, props.channel, inputMessage)
+        if(encryptedMessage.error) {return console.error(encryptedMessage.errorMessage)}
 
+        //Build Sendbird message object
         const params = new props.sdk.UserMessageParams();
         params.message = encryptedMessage
         params.customType = "encrypted-user-message"
 
+        //Send message to Sendbird
         sendMessage(props.channel.channel.url, params).then((message, error) => {
+            //Reset input
             setPlaceHolder("Enter Message");
             setInputMessage("");
         })

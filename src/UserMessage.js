@@ -5,16 +5,13 @@ import {
     CardHeader,
     Avatar,
     CardContent,
-    CardActions,
-    Typography,
-    Button,
-    TextField
+    Typography
 } from "@material-ui/core";
 import { decryptMessage } from "./e3";
 
 export default function UserMessage(props) {
     // props
-    const {message, e3, channel, userId} = props;
+    const {message, channel, userId} = props;
     const [decryptedMessage, setDecryptedMessage] = useState("...")
     const [direction, setDirection] = useState("incoming")
 
@@ -22,7 +19,6 @@ export default function UserMessage(props) {
         if (props.message.customType === "encrypted-user-message") {
             decryptMessage(props.e3, props.message, channel).then(result => {
                 if (result.error) {
-                    console.log("Decrypt")
                     setDecryptedMessage("Decryption Failed")// console.log(result)
                 } else {
                     setDecryptedMessage(result);

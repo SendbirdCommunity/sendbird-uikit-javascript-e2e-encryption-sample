@@ -6,8 +6,8 @@ import {
     loadVirgilGroup
 } from "./e3";
 import {
-    Channel as SBConversation,
-    ChannelList as SBChannelList,
+    Channel,
+    ChannelList,
     withSendBird
 } from "sendbird-uikit";
 
@@ -26,8 +26,8 @@ function CustomizedApp(props) {
             const eThree = await EThree.initialize(() => getVirgilToken(props.config.userId));
             setE3(eThree)
             try {
-                // await eThree.unregister()
-                await eThree.register()
+              //   await eThree.unregister()
+               await eThree.register();
             } catch (e) {
                 console.warn("expected error:", e)
             }
@@ -46,7 +46,7 @@ function CustomizedApp(props) {
         <div className="customized-app">
             <div className="sendbird-app__wrap">
                 <div className="sendbird-app__channellist-wrap">
-                    <SBChannelList
+                    <ChannelList
                         onBeforeCreateChannel={(userIds) => {
                             const channel_url = `virgil_sendbird_group_channel_${uuidv4()}`
                             createVirgilGroup(e3, channel_url, userIds)
@@ -62,7 +62,7 @@ function CustomizedApp(props) {
                     />
                 </div>
                 <div className="sendbird-app__conversation-wrap">
-                    <SBConversation
+                    <Channel
                         renderChatItem={(props) => {
                             if (props.message.messageType === "user") {
                                 return (<UserMessage
@@ -76,7 +76,7 @@ function CustomizedApp(props) {
                             }
                         }
                         }
-                        channelUrl={currentChannelUrl}
+                        channelUrl= { currentChannelUrl }
                         renderMessageInput={(channel) => (
                             <CustomMessageInput
                                 channel={channel}
